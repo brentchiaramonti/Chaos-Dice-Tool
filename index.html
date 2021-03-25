@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<style>
+		input.side_field {
+			height: 20px;
+    		font-size: 20px;
+		}
+	</style>
+
+<label for="dice_sides">Number of sides</label>
+<input type="number" id="dice_sides" name="dice_sides" min="1" value="6" onchange="updateSideOptions()">
+
+<div id="stats">
+	<h2>Expected Value</h2>
+	<p id="expected_value">
+		0
+	</p>
+
+	<h2>Standard Deviation</h2>
+	<p id="standard_deviation">
+		0
+	</p>
+
+</div>
+
+<div id="sides">
+
+</div>
+
+<div id="table">
+	<h2>Standard Dice</h2>
+
+	<h3>D4</h3>
+	<p>Expected Value: 2.5<br>
+	Standard Deviation: 1.11803398875</p>
+
+	<h3>D6</h3>
+	<p>Expected Value: 3.5<br>
+	Standard Deviation: 1.70782512766</p>
+	
+
+	<h3>D8</h3>
+	<p>Expected Value: 4.5<br>
+	Standard Deviation: 2.29128784748</p>
+
+	<h3>D10</h3>
+	<p>Expected Value: 5.5<br>
+	Standard Deviation: 2.87228132327</p>
+
+	<h3>D12</h3>
+	<p>Expected Value: 6.5<br>
+	Standard Deviation: 3.45205252953</p>
+
+	<h3>D20</h3>
+	<p>Expected Value: 10.5<br>
+	Standard Deviation: 5.76628129734</p>
+
+	<h3>D100</h3>
+	<p>Expected Value: 50.5<br>
+	Standard Deviation: 28.8660700477</p>
+
+	<h2>What is standard deviation?</h2>
+	<p>The Standard Deviation is a measure of how spread out numbers are. Can be considered a measure of how crazy the die is.</p>
+
+	<h2>What is expected value?</h2>
+	<p>The expected average of rolling a die an infinite amount of times. Can be considered a measure of how powerful the die is</p>
+
+</div>
+
+<script>
+
+updateSideOptions();
+
+function updateSideOptions() {
+	var amount = document.getElementById('dice_sides').value;
+
+	var sides = document.querySelectorAll('.side_field');
+
+	console.log(sides.length);
+
+	if (sides.length < amount) {
+		amount_to_add = amount - sides.length;
+		console.log(sides.length);
+		for (i = 0; i < amount_to_add; i++) {
+			var side_field = document.createElement('input');
+			side_field.classList.add('side_field');
+			side_field.setAttribute("name", "side_field");
+			side_field.setAttribute("type", "number");
+			side_field.setAttribute("value", "0");
+			side_field.onchange = function(){
+				calculateExpectedValue();
+				calculateStandardDeviation();
+			};
+			document.getElementById("sides").appendChild(side_field);
+		}
+	} else if (sides.length > amount) {
+		amount_to_remove = sides.length - amount;
+		for (i = sides.length - 1; i >= amount; i-- ) {
+			sides[i].remove();
+		}
+	}
+}
+
+function calculateExpectedValue() {
+	var sides = document.querySelectorAll('.side_field');
+	probability = 1/(sides.length);
+	sum = 0;
+	for (i = 0; i < sides.length; i++) {
+		sum += probability * parseInt(sides[i].value);
+	}
+
+	document.getElementById('expected_value').innerHTML = sum;
+}
+
+function calculateStandardDeviation() {
+	var sides = document.querySelectorAll('.side_field');
+	sum = 0;
+	for (i = 0; i < sides.length; i++) {
+		sum += parseInt(sides[i].value);
+	}
+
+	mean = sum / sides.length;
+
+	variance = 0;
+
+	for (i = 0; i < sides.length; i++) {
+		difference = parseInt(sides[i].value) - mean;
+		difference *= difference;
+		variance += difference;
+	}
+
+	variance = variance / sides.length;
+
+	standard_deviation = Math.sqrt(variance);
+	document.getElementById('standard_deviation').innerHTML = standard_deviation;
+}
+
+
+</script>
+
+</body>
+</html>
