@@ -51,6 +51,15 @@ div#stats {
 			<span id="advantage_standard_deviation">0</span>
 		</p>
 	</div>
+	<div>
+		<h2>Disadvantage Roll</h2>
+		<p><b>Expected Value: </b>
+			<span id="disadvantage_expected_value">0</span>
+		</p>
+		<p><b>Standard Deviation: </b>
+			<span id="disadvantage_standard_deviation">0</span>
+		</p>
+	</div>
 </div>
 <hr>
 <h2>Sides of the die</h2>
@@ -72,63 +81,93 @@ div#stats {
 			<h3>D4</h3>
 			<p>Expected Value: 2.5<br>
 			Standard Deviation: 1.11803398875<br>
+			<hr>
 			Advantage Expected Value: 3.125<br>
-			Advantage Standard Deviation: 0.9270248108869579</p>
+			Advantage Standard Deviation: 0.9270248108869579<br>
+			<hr>
+			Disadvantage Expected Value: 1.875<br>
+			Disadvantage Standard Deviation: 0.9270248108869579</p>
 		</div>
 
 		<div class='die_stats'>
 			<h3>D6</h3>
 			<p>Expected Value: 3.5<br>
 			Standard Deviation: 1.70782512766<br>
+			<hr>
 			Advantage Expected Value: 4.472222222222222<br>
-			Advantage Standard Deviation: 1.4040835506777907</p>
+			Advantage Standard Deviation: 1.4040835506777907<br>
+			<hr>
+			Disadvantage Expected Value: 2.53<br>
+			Disadvantage Standard Deviation: 1.4040835506777902</p>
 		</div>
 
 		<div class='die_stats'>
 			<h3>D8</h3>
 			<p>Expected Value: 4.5<br>
 			Standard Deviation: 2.29128784748<br>
+			<hr>
 			Advantage Expected Value: 5.8125<br>
-			Advantage Standard Deviation: 1.87812240016459</p>
+			Advantage Standard Deviation: 1.87812240016459<br>
+			<hr>
+			Disadvantage Expected Value: 3.1875<br>
+			Disadvantage Standard Deviation: 1.87812240016459</p>
 		</div>
 
 		<div class='die_stats'>
 			<h3>D10</h3>
 			<p>Expected Value: 5.5<br>
 			Standard Deviation: 2.87228132327<br>
+			<hr>
 			Advantage Expected Value: 7.15<br>
-			Advantage Standard Deviation: 2.3510635891017495</p>
+			Advantage Standard Deviation: 2.3510635891017495<br>
+			<hr>
+			Disadvantage Expected Value: 3.85<br>
+			Disadvantage Standard Deviation: 2.35106358910175</p>
 		</div>
 
 		<div class='die_stats'>
 			<h3>D12</h3>
 			<p>Expected Value: 6.5<br>
 			Standard Deviation: 3.45205252953<br>
+			<hr>
 			Advantage Expected Value: 8.486<br>
-			Advantage Standard Deviation: 2.8234782310100526</p>
+			Advantage Standard Deviation: 2.8234782310100526<br>
+			<hr>
+			Disadvantage Expected Value: 4.514<br>
+			Disadvantage Standard Deviation: 2.8234782310100517</p>
 		</div>
 
 		<div class='die_stats'>
 			<h3>D20</h3>
 			<p>Expected Value: 10.5<br>
 			Standard Deviation: 5.76628129734<br>
+			<hr>
 			Advantage Expected Value: 13.825<br>
-			Advantage Standard Deviation: 4.711090638058237</p>
+			Advantage Standard Deviation: 4.711090638058237<br>
+			<hr>
+			Disadvantage Expected Value: 7.175<br>
+			Disadvantage Standard Deviation: 4.711090638058237</p>
 		</div>
 
 		<div class='die_stats'>
 			<h3>D100</h3>
 			<p>Expected Value: 50.5<br>
 			Standard Deviation: 28.8660700477<br>
+			<hr>
 			Advantage Expected Value: 67.165<br>
-			Advantage Standard Deviation: 23.56963671760778</p>
+			Advantage Standard Deviation: 23.56963671760778<br>
+			<hr>
+			Disadvantage Expected Value: 33.835<br>
+			Disadvantage Standard Deviation: 23.56963671760773</p>
 		</div>
+
+		<h2>What is expected value?</h2>
+		<p>The expected average of rolling a die an infinite amount of times. Can be considered a measure of how powerful the die is.</p>
 
 		<h2>What is standard deviation?</h2>
 		<p>The Standard Deviation is a measure of how spread out numbers are. Can be considered a measure of how crazy the die is.</p>
 
-		<h2>What is expected value?</h2>
-		<p>The expected average of rolling a die an infinite amount of times. Can be considered a measure of how powerful the die is</p>
+
 	</div>
 
 </div>
@@ -191,6 +230,18 @@ function calculateAdvantageValues(side_values)
 	return values;
 }
 
+function calculateDisadvantageValues(side_values)
+{
+	values = [];
+	for (side1 in side_values) {
+		for (side2 in side_values) {
+			values.push(Math.min(side_values[side1], side_values[side2]));
+		}
+	}
+
+	return values;
+}
+
 function updateSideOptions() {
 	var amount = document.getElementById('dice_sides').value;
 
@@ -238,17 +289,25 @@ function calculateExpectedValues() {
 	}
 
 	var advantage_side_values = calculateAdvantageValues(side_values);
+	var disadvantage_side_values = calculateDisadvantageValues(side_values);
 
 	var expected_value = calculateExpectedValue(side_values);
 	var advantage_expected_value = calculateExpectedValue(advantage_side_values);
+	var disadvantage_expected_value = calculateExpectedValue(disadvantage_side_values);
+
 
 	var standard_deviation = calculateStandardDeviation(side_values);
 	var advantage_standard_deviation = calculateStandardDeviation(advantage_side_values);
+	var disadvantage_standard_deviation = calculateStandardDeviation(disadvantage_side_values);
 
 	document.getElementById('expected_value').innerHTML = expected_value;
 	document.getElementById('advantage_expected_value').innerHTML = advantage_expected_value;
+	document.getElementById('disadvantage_expected_value').innerHTML = disadvantage_expected_value;
+
 	document.getElementById('standard_deviation').innerHTML = standard_deviation;
 	document.getElementById('advantage_standard_deviation').innerHTML = advantage_standard_deviation;
+	document.getElementById('disadvantage_standard_deviation').innerHTML = disadvantage_standard_deviation;
+
 }
 
 function calculateExpectedValue(side_values) {
